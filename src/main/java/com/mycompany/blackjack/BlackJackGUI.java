@@ -6,6 +6,7 @@
 /**
  *
  * @author janufkrishnan
+ * @author gwynerwitkamp
  */
 import java.util.Random;
 public class BlackJackGUI extends javax.swing.JFrame {
@@ -27,9 +28,9 @@ public class BlackJackGUI extends javax.swing.JFrame {
     }
     private void newGame() {
 
-        playerTotal = rand.nextInt(10) + 2 + rand.nextInt(10) + 2;
+        playerTotal = rand.nextInt(9) + 2 + rand.nextInt(9) + 2;
 
-        dealerTotal = rand.nextInt(10) + 2 + rand.nextInt(10) + 2;
+        dealerTotal = rand.nextInt(9) + 2 + rand.nextInt(9) + 2;
 
         gameOver = false;
 
@@ -37,32 +38,34 @@ public class BlackJackGUI extends javax.swing.JFrame {
         jLabel2.setText("Player's hand: " + playerTotal);
         }
         
-        private void stand() {
+    private void stand() {
 
-    if(gameOver)
-        return;
+        if(gameOver)
+            return;
 
-    while(dealerTotal < 17) {
-        dealerTotal += rand.nextInt(10) + 1;
-    }
+        while(dealerTotal < 17) {
+            dealerTotal += rand.nextInt(10) + 1;
+        }
 
-    jLabel1.setText("Dealer's hand: " + dealerTotal);
+        jLabel1.setText("Dealer's hand: " + dealerTotal);
 
-    if(dealerTotal > 21) {
-        jLabel2.setText("Player's hand: " + playerTotal + " | You Win!");
-    }
-    else if(playerTotal > dealerTotal) {
-        jLabel2.setText("Player's hand: " + playerTotal + " | You Win!");
-    }
-    else if(playerTotal < dealerTotal) {
-        jLabel2.setText("Player's hand: " + playerTotal + " | Dealer Wins!");
-    }
-    else {
-        jLabel2.setText("Player's hand: " + playerTotal + " | Push!");
-    }
+        if(dealerTotal > 21) {
+            jLabel2.setText("Player's hand: " + playerTotal + " You Win!");
+            
+        } else if(playerTotal == 21 && playerTotal > dealerTotal) {
+            jLabel2.setText("Player's hand: " + playerTotal + " You Win!");
+    
+        } else if(playerTotal > dealerTotal) {
+            jLabel2.setText("Player's hand: " + playerTotal + " You Win!");
+    
+        } else if(playerTotal < dealerTotal) {
+            jLabel2.setText("Player's hand: " + playerTotal + " Dealer Wins!");
+   
+        } else {
+            jLabel2.setText("Player's hand: " + playerTotal + " It's a Draw!");
+        }
 
-    gameOver = true;
-
+        gameOver = true;
     }
 
     /**
@@ -190,7 +193,7 @@ public class BlackJackGUI extends javax.swing.JFrame {
         jLabel2.setText("Player's hand: " + playerTotal);
         if(playerTotal > 21) {
             jLabel1.setText("Dealer's hand: " + dealerTotal);
-        jLabel2.setText("Player's hand: " + playerTotal + " | BUST! Dealer Wins!");
+        jLabel2.setText("Player's hand: " + playerTotal + " BUST! Dealer Wins!");
         gameOver = true;}                               
     }//GEN-LAST:event_jButton1ActionPerformed
 
