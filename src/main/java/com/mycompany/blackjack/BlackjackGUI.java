@@ -7,7 +7,8 @@ package com.mycompany.blackjack;
 
 /**
  *
- * @author 20253182
+ * @author 2375125
+ * @author 2224429
  */
 
 public class BlackjackGUI extends javax.swing.JFrame {
@@ -20,10 +21,10 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
 
 private String cardName(int card) {
     switch (card) {
-        case 1: return "Aas";
-        case 11: return "Boer";
-        case 12: return "Vrouw";
-        case 13: return "Heer";
+        case 1: return "Ace";
+        case 11: return "Jack";
+        case 12: return "Queen";
+        case 13: return "King";
         default: return String.valueOf(card);
     }
 }
@@ -32,7 +33,7 @@ private String formatCards(java.util.List<Integer> cards,
                            boolean hideSecondCard) {
     StringBuilder result = new StringBuilder("[");
 
-    for (int i = 0; i < cards.size(); i++) {
+    for (int i = 0; i < cards.size(); i = i + 1) {
         if (i > 0) {
             result.append(", ");
         }
@@ -89,9 +90,8 @@ if (hideCard) {
 
 
 
-    /**
-     * Creates new form BlackjackGUI
-     */
+
+    //Creates new form BlackjackGUI
     public BlackjackGUI() {
         initComponents();
         game = new BlackjackGame();

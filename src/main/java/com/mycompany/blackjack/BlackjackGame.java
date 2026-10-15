@@ -7,7 +7,8 @@ package com.mycompany.blackjack;
 
 /**
  *
- * @author 20253182
+ * @author 2375125
+ * @author 2224429
  */
 
 import java.util.ArrayList;
@@ -16,8 +17,10 @@ import java.util.Random;
 
 public class BlackjackGame {
 
+    //Mixes up the cards
     private final Random rand = new Random();
 
+    //Cards value of the player and dealer
     private final List<Integer> playerCards = new ArrayList<>();
     private final List<Integer> dealerCards = new ArrayList<>();
 
@@ -33,7 +36,7 @@ public class BlackjackGame {
         dealerCards.clear();
         dealerRevealed = false;
 
-        // Deel twee kaarten aan iedere speler
+        //Draw two cards to both the player and the dealer
         playerCards.add(drawCard());
         dealerCards.add(drawCard());
         playerCards.add(drawCard());
@@ -43,7 +46,7 @@ public class BlackjackGame {
     }
 
     private int drawCard() {
-        // 1 = aas, 11 = boer, 12 = vrouw, 13 = heer
+        // 1 = ace, 11 = jack, 12 = queen, 13 = king
         return rand.nextInt(13) + 1;
     }
 
@@ -77,19 +80,19 @@ public class BlackjackGame {
 
         for (int card : cards) {
             if (card == 1) {
-                total += 11;
-                aces++;
+                total = total + 11;
+                aces = aces + 1;
             } else if (card >= 11) {
-                total += 10;
+                total = total + 10;
             } else {
-                total += card;
+                total = total + card;
             }
         }
 
-        // Een aas telt als 1 als 11 bust zou veroorzaken
+        //Ace has value 1 if value 11 will lead to a bust
         while (total > 21 && aces > 0) {
-            total -= 10;
-            aces--;
+            total = total - 10;
+            aces = aces - 1;
         }
 
         return total;

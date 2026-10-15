@@ -10,7 +10,8 @@ import com.mycompany.blackjack.BlackjackGame;
 
 /**
  *
- * @author 20253182
+ * @author 2375125
+ * @author 2224429
  */
 public interface GameState {
     void hit(BlackjackGame game);

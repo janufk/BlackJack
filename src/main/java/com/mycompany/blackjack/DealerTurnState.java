@@ -1,8 +1,5 @@
 package com.mycompany.blackjack;
 
-
-import com.mycompany.blackjack.BlackjackGame;
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -10,14 +7,15 @@ import com.mycompany.blackjack.BlackjackGame;
 
 /**
  *
- * @author 20253182
+ * @author 2375125
+ * @author 2224429
  */
 
 public class DealerTurnState implements GameState {
 
     @Override
     public void hit(BlackjackGame game) {
-        // De speler mag niet meer hitten
+        //The player is not able to hit anymore
     }
 
     @Override

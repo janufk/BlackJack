@@ -1,11 +1,5 @@
 package com.mycompany.blackjack;
 
-
-import com.mycompany.blackjack.GameState;
-import com.mycompany.blackjack.GameOverState;
-import com.mycompany.blackjack.DealerTurnState;
-import com.mycompany.blackjack.BlackjackGame;
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -13,7 +7,8 @@ import com.mycompany.blackjack.BlackjackGame;
 
 /**
  *
- * @author 20253182
+ * @author 2375125
+ * @author 2224429
  */
 
 public class PlayerTurnState implements GameState {
@@ -27,7 +22,7 @@ public class PlayerTurnState implements GameState {
                 game.revealDealer();
                 game.setState(new GameOverState());
             } else {
-                // Bij 21 eindigt de beurt en speelt de dealer
+                //At 21, the player's turn ends and the dealer's cards will be revealed
                 stand(game);
             }
         }
