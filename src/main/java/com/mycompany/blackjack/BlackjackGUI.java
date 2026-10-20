@@ -13,7 +13,7 @@ package com.mycompany.blackjack;
 public class BlackjackGUI extends javax.swing.JFrame {
 
 private BlackjackGame game;
-
+//hai
 
 private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BlackjackGUI.class.getName());
     /**
