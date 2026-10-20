@@ -54,26 +54,18 @@ public class Card {
     /**
      * Zet de kaart om naar een bestandsnaam
      * die de GUI voor de afbeelding kan gebruiken.
+     * @return 
      */
     public String getImageFilename() {
         String rank;
 
-        switch (value) {
-            case 1:
-                rank = "ace";
-                break;
-            case 11:
-                rank = "jack";
-                break;
-            case 12:
-                rank = "queen";
-                break;
-            case 13:
-                rank = "king";
-                break;
-            default:
-                rank = String.valueOf(value);
-        }
+        rank = switch (value) {
+            case 1 -> "ace";
+            case 11 -> "jack";
+            case 12 -> "queen";
+            case 13 -> "king";
+            default -> String.valueOf(value);
+        };
 
         String filename = rank + "_of_" + suit;
 

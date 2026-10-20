@@ -19,7 +19,7 @@ package com.mycompany.blackjack;
  * Het deck deelt kaarten uit, de handen bewaren ze
  * en de GameState bepaalt welke acties toegestaan zijn.
  */
-public class BlackjackGame {
+public final class BlackjackGame {
 
     private Deck deck;
     private Hand playerHand;

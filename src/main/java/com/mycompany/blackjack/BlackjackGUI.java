@@ -12,8 +12,8 @@ package com.mycompany.blackjack;
 
 public class BlackjackGUI extends javax.swing.JFrame {
 
-private BlackjackGame game;
-//hai
+private final BlackjackGame game;
+
 
 private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BlackjackGUI.class.getName());
     /**
@@ -129,6 +129,9 @@ private String cardsHTML(
             );
         }
     }
+    
+    jButton1.setEnabled(!game.isGameOver());
+    jButton2.setEnabled(!game.isGameOver());
 }
 
 

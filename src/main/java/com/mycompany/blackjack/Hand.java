@@ -36,6 +36,7 @@ public class Hand {
      * Berekent de Blackjack-score.
      * Azen tellen als 11, maar worden 1 als de score
      * anders boven 21 uitkomt.
+     * @return 
      */
     public int getTotal() {
         int total = 0;

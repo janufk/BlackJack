@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Beheert één standaard kaartspel van 52 kaarten.
  */
-public class Deck {
+public final class Deck {
 
     private final List<Card> cards = new ArrayList<>();
     private int nextCard;
@@ -52,6 +52,7 @@ public class Deck {
 
     /**
      * Geeft de volgende kaart uit het geschudde kaartspel.
+     * @return 
      */
     public Card drawCard() {
         if (nextCard >= cards.size()) {
