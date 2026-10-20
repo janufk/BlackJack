@@ -10,7 +10,10 @@ package com.mycompany.blackjack;
  * @author 20253182
  */
 
+
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -21,6 +24,13 @@ public class BlackjackGame {
     private final List<Integer> playerCards = new ArrayList<>();
     private final List<Integer> dealerCards = new ArrayList<>();
 
+    private final List<String> playerSuits = new ArrayList<>();
+    private final List<String> dealerSuits = new ArrayList<>();
+
+    private final List<Integer> deckValues = new ArrayList<>();
+    private final List<String> deckSuits = new ArrayList<>();
+
+    private int nextCard;
     private GameState state;
     private boolean dealerRevealed;
 
@@ -31,20 +41,64 @@ public class BlackjackGame {
     public void newGame() {
         playerCards.clear();
         dealerCards.clear();
+        playerSuits.clear();
+        dealerSuits.clear();
+
+        deckValues.clear();
+        deckSuits.clear();
+
+        String[] suits = {
+            "clubs", "diamonds", "hearts", "spades"
+        };
+
+        // Maak een standaard kaartspel van 52 unieke kaarten.
+        for (String suit : suits) {
+            for (int value = 1; value <= 13; value++) {
+                deckValues.add(value);
+                deckSuits.add(suit);
+            }
+        }
+
+        // Schud het kaartspel.
+        List<Integer> order = new ArrayList<>();
+        for (int i = 0; i < 52; i++) {
+            order.add(i);
+        }
+        Collections.shuffle(order, rand);
+
+        List<Integer> shuffledValues = new ArrayList<>();
+        List<String> shuffledSuits = new ArrayList<>();
+
+        for (int index : order) {
+            shuffledValues.add(deckValues.get(index));
+            shuffledSuits.add(deckSuits.get(index));
+        }
+
+        deckValues.clear();
+        deckValues.addAll(shuffledValues);
+
+        deckSuits.clear();
+        deckSuits.addAll(shuffledSuits);
+
+        nextCard = 0;
         dealerRevealed = false;
-
-        // Deel twee kaarten aan iedere speler
-        playerCards.add(drawCard());
-        dealerCards.add(drawCard());
-        playerCards.add(drawCard());
-        dealerCards.add(drawCard());
-
         state = new PlayerTurnState();
+
+        // Beginhand: twee kaarten per speler.
+        drawPlayerCard();
+        drawDealerCard();
+        drawPlayerCard();
+        drawDealerCard();
     }
 
     private int drawCard() {
-        // 1 = aas, 11 = boer, 12 = vrouw, 13 = heer
-        return rand.nextInt(13) + 1;
+        if (nextCard >= deckValues.size()) {
+            throw new IllegalStateException(
+                "Er zijn geen kaarten meer."
+            );
+        }
+
+        return nextCard++;
     }
 
     public void hit() {
@@ -56,11 +110,15 @@ public class BlackjackGame {
     }
 
     public void drawPlayerCard() {
-        playerCards.add(drawCard());
+        int index = drawCard();
+        playerCards.add(deckValues.get(index));
+        playerSuits.add(deckSuits.get(index));
     }
 
     public void drawDealerCard() {
-        dealerCards.add(drawCard());
+        int index = drawCard();
+        dealerCards.add(deckValues.get(index));
+        dealerSuits.add(deckSuits.get(index));
     }
 
     public int getPlayerTotal() {
@@ -86,7 +144,6 @@ public class BlackjackGame {
             }
         }
 
-        // Een aas telt als 1 als 11 bust zou veroorzaken
         while (total > 21 && aces > 0) {
             total -= 10;
             aces--;
@@ -101,6 +158,14 @@ public class BlackjackGame {
 
     public List<Integer> getDealerCards() {
         return new ArrayList<>(dealerCards);
+    }
+
+    public List<String> getPlayerSuits() {
+        return new ArrayList<>(playerSuits);
+    }
+
+    public List<String> getDealerSuits() {
+        return new ArrayList<>(dealerSuits);
     }
 
     public boolean isDealerRevealed() {
