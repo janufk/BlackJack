@@ -8,8 +8,6 @@ package com.mycompany.blackjack;
  *
  * @author 20253182
  */
-
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -52,16 +50,16 @@ public final class Deck {
 
     /**
      * Geeft de volgende kaart uit het geschudde kaartspel.
-     * @return 
+     *
+     * @return
      */
     public Card drawCard() {
         if (nextCard >= cards.size()) {
             throw new IllegalStateException(
-                "Er zijn geen kaarten meer."
+                    "Er zijn geen kaarten meer."
             );
         }
 
         return cards.get(nextCard++);
     }
 }
-

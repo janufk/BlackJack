@@ -8,8 +8,6 @@ package com.mycompany.blackjack;
  *
  * @author 20253182
  */
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,10 +31,10 @@ public class Hand {
     }
 
     /**
-     * Berekent de Blackjack-score.
-     * Azen tellen als 11, maar worden 1 als de score
-     * anders boven 21 uitkomt.
-     * @return 
+     * Berekent de Blackjack-score. Azen tellen als 11, maar worden 1 als de
+     * score anders boven 21 uitkomt.
+     *
+     * @return
      */
     public int getTotal() {
         int total = 0;
@@ -58,4 +56,3 @@ public class Hand {
         return total;
     }
 }
-

@@ -4,19 +4,12 @@ package com.mycompany.blackjack;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 /**
  *
  * @author 20253182
  */
-
-
-
-
-
 /**
- * Beheert een Blackjack-ronde.
- * Het deck deelt kaarten uit, de handen bewaren ze
+ * Beheert een Blackjack-ronde. Het deck deelt kaarten uit, de handen bewaren ze
  * en de GameState bepaalt welke acties toegestaan zijn.
  */
 public final class BlackjackGame {
@@ -27,10 +20,6 @@ public final class BlackjackGame {
 
     private GameState state;
     private boolean dealerRevealed;
-
-public BlackjackGame() {
-    newGame();
-    }
 
     /**
      * Start een nieuwe ronde met een nieuw geschud deck.
@@ -53,17 +42,20 @@ public BlackjackGame() {
 
     public void hit() {
         state.hit(this);
+        if (!isGameOver()
+                && state instanceof PlayerTurnState
+                && getPlayerTotal() == 21) {
+            stand();
+        }
     }
 
-    
-public void stand() {
-    state.stand(this);
+    public void stand() {
+        state.stand(this);
 
-    if (state instanceof DealerTurnState dealerTurnState) {
+        if (state instanceof DealerTurnState dealerTurnState) {
             dealerTurnState.playDealerTurn(this);
+        }
     }
-}
-
 
     public void drawPlayerCard() {
         playerHand.addCard(deck.drawCard());
@@ -72,6 +64,7 @@ public void stand() {
     public void drawDealerCard() {
         dealerHand.addCard(deck.drawCard());
     }
+
     public int getPlayerTotal() {
         return playerHand.getTotal();
     }
@@ -79,7 +72,6 @@ public void stand() {
     public int getDealerTotal() {
         return dealerHand.getTotal();
     }
-
 
     public java.util.List<Card> getPlayerCards() {
         return playerHand.getCards();

@@ -1,150 +1,181 @@
 package com.mycompany.blackjack;
 
+import javax.swing.JOptionPane;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author 20253182
  */
-
 public class BlackjackGUI extends javax.swing.JFrame {
 
-private final BlackjackGame game;
+    private final BlackjackGame game;
+    private final BettingSystem bettingSystem;
+    private final BettingController bettingController;
 
+    private boolean betSettled = true;
+    private boolean roundActive = false;
 
-private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BlackjackGUI.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BlackjackGUI.class.getName());
+
     /**
      * Creates new form BlackjackGUI
      */
     public BlackjackGUI() {
         initComponents();
+
         setTitle("Blackjack");
         setSize(650, 700);
-        
-        
+        setLocationRelativeTo(null);
+
+        bettingSystem = new BettingSystem();
+        bettingController = new BettingController(bettingSystem);
         game = new BlackjackGame();
+
+        game.newGame();
+
+        if (bettingController.requestBet(this)) {
+            roundActive = true;
+            betSettled = false;
+        }
+
         updateGUI();
     }
 
+    private String cardsHTML(
+            java.util.List<Card> cards,
+            boolean hideSecondCard) {
 
+        StringBuilder html = new StringBuilder("<html>");
 
-
-
-private String cardsHTML(
-        java.util.List<Card> cards,
-        boolean hideSecondCard) {
-
-    StringBuilder html = new StringBuilder("<html>");
-
-    for (int i = 0; i < cards.size(); i++) {
-        if (hideSecondCard && i == 1) {
-            html.append("<img src='")
-                .append(getClass().getResource("/images/card_down.jpg"))
-                .append("' width='75' height='110'> ");
-        } else {
-            Card card = cards.get(i);
-
-            String filename = card.getImageFilename();
-            java.net.URL imageUrl =
-                    getClass().getResource("/images/" + filename);
-
-            if (imageUrl != null) {
+        for (int i = 0; i < cards.size(); i++) {
+            if (hideSecondCard && i == 1) {
                 html.append("<img src='")
-                    .append(imageUrl)
-                    .append("' width='75' height='110'> ");
+                        .append(getClass().getResource("/images/card_down.jpg"))
+                        .append("' width='75' height='110'> ");
             } else {
-                html.append("[")
-                    .append(card.getValue())
-                    .append(" ")
-                    .append(card.getSuit())
-                    .append("] ");
+                Card card = cards.get(i);
+
+                String filename = card.getImageFilename();
+                java.net.URL imageUrl
+                        = getClass().getResource("/images/" + filename);
+
+                if (imageUrl != null) {
+                    html.append("<img src='")
+                            .append(imageUrl)
+                            .append("' width='75' height='110'> ");
+                } else {
+                    html.append("[")
+                            .append(card.getValue())
+                            .append(" ")
+                            .append(card.getSuit())
+                            .append("] ");
+                }
             }
         }
+
+        html.append("</html>");
+        return html.toString();
     }
-
-    html.append("</html>");
-    return html.toString();
-}
-
-
-
-
-
-
-
 
     private void updateGUI() {
-    boolean hideCard = !game.isDealerRevealed();
 
-    jLabel1.setText(
-        "<html>Dealer: "
-        + cardsHTML(
-            game.getDealerCards(),
-            hideCard
-        ).replace("<html>", "").replace("</html>", "")
-        + (hideCard
-            ? ""
-            : " (" + game.getDealerTotal() + ")")
-        + "</html>"
-    );
-
-    jLabel2.setText(
-        "<html>Player: "
-        + cardsHTML(
-            game.getPlayerCards(),
-            false
-        ).replace("<html>", "").replace("</html>", "")
-        + " (" + game.getPlayerTotal() + ")"
-        + "</html>"
-    );
-
-    if (game.isGameOver()) {
-        if (game.getPlayerTotal() > 21) {
-            jLabel2.setText(
-                jLabel2.getText().replace(
-                    "</html>", " - Bust! Je verliest.</html>"
-                )
-            );
-        } else if (game.getDealerTotal() > 21
-                || game.getPlayerTotal() > game.getDealerTotal()) {
-            jLabel2.setText(
-                jLabel2.getText().replace(
-                    "</html>", " - Je wint!</html>"
-                )
-            );
-        } else if (game.getPlayerTotal() < game.getDealerTotal()) {
-            jLabel2.setText(
-                jLabel2.getText().replace(
-                    "</html>", " - Dealer wint.</html>"
-                )
-            );
-        } else {
-            jLabel2.setText(
-                jLabel2.getText().replace(
-                    "</html>", " - Gelijkspel.</html>"
-                )
-            );
+        // Shows dealercards when round is finished.
+        if (game.isGameOver()) {
+            game.revealDealer();
         }
+
+        boolean hideCard = !game.isDealerRevealed();
+
+        jLabel1.setText(
+                "<html>Dealer: "
+                + cardsHTML(game.getDealerCards(), hideCard)
+                        .replace("<html>", "")
+                        .replace("</html>", "")
+                + (hideCard ? "" : " (" + game.getDealerTotal() + ")")
+                + "</html>"
+        );
+
+        jLabel2.setText(
+                "<html>Player: "
+                + cardsHTML(game.getPlayerCards(), false)
+                        .replace("<html>", "")
+                        .replace("</html>", "")
+                + " (" + game.getPlayerTotal() + ")"
+                + "</html>"
+        );
+
+        if (roundActive && game.isGameOver() && !betSettled) {
+
+            int playerTotal = game.getPlayerTotal();
+            int dealerTotal = game.getDealerTotal();
+
+            String result;
+
+            if (playerTotal > 21) {
+                result = "lose";
+            } else if (dealerTotal > 21 || playerTotal > dealerTotal) {
+                result = "win";
+            } else if (playerTotal < dealerTotal) {
+                result = "lose";
+            } else {
+                result = "draw";
+            }
+
+            // Verwerk de inzet één keer.
+            bettingController.settleBet(result);
+            betSettled = true;
+
+            // Toon de uitslag op het speelscherm.
+            String resultText;
+
+            switch (result) {
+                case "win" ->
+                    resultText = " - You win!";
+                case "lose" ->
+                    resultText = " - You lose.";
+                default ->
+                    resultText = " - Draw!";
+            }
+
+            jLabel2.setText(
+                    jLabel2.getText().replace("</html>", resultText + "</html>")
+            );
+
+            // Controleer of de speler geen fiches meer heeft.
+            if (bettingSystem.getBalance() <= 0) {
+                roundActive = false;
+
+                jButton1.setEnabled(false);
+                jButton2.setEnabled(false);
+                jButton3.setEnabled(false);
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "GAME OVER!\nYou are out of money!",
+                        "Game Over",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+
+                return;
+            }
+
+        }
+
+        // Knoppen alleen gebruiken tijdens een actieve ronde.
+        jButton1.setEnabled(roundActive && !game.isGameOver());
+        jButton2.setEnabled(roundActive && !game.isGameOver());
+        jButton3.setEnabled(!roundActive || game.isGameOver());
+
+        setTitle(
+                "Blackjack - Saldo: " + bettingSystem.getBalance()
+                + " fiches - Inzet: " + bettingSystem.getCurrentBet()
+        );
     }
-    
-    jButton1.setEnabled(!game.isGameOver());
-    jButton2.setEnabled(!game.isGameOver());
-}
 
-
-
-
-
-
-
-
-    
-
-            
-            
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -156,6 +187,7 @@ private String cardsHTML(
 
         jColorChooser1 = new javax.swing.JColorChooser();
         jColorChooser2 = new javax.swing.JColorChooser();
+        jDialog1 = new javax.swing.JDialog();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
@@ -163,6 +195,17 @@ private String cardsHTML(
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+
+        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -262,23 +305,67 @@ private String cardsHTML(
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        if (!roundActive || game.isGameOver()) {
+            return;
+        }
+
         game.hit();
+
         updateGUI();
-    
+
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+
+        // Geen geld meer? Dan is het spel afgelopen.
+        if (bettingSystem.getBalance() <= 0) {
+            roundActive = false;
+            jButton1.setEnabled(false);
+            jButton2.setEnabled(false);
+            jButton3.setEnabled(false);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "GAME OVER!\nJe hebt geen fiches meer over.",
+                    "Game Over",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+            return;
+        }
+
+        // Je moet eerst de huidige ronde afmaken.
+        if (roundActive && !game.isGameOver()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Maak eerst de huidige ronde af."
+            );
+            return;
+        }
+
+        // Vraag een nieuwe inzet.
+        if (!bettingController.requestBet(this)) {
+            return;
+        }
+
         game.newGame();
-        updateGUI();  
+        roundActive = true;
+        betSettled = false;
+
+        updateGUI();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        game.stand(); 
+        if (!roundActive || game.isGameOver()) {
+            return;
+        }
+
+        game.stand();
         updateGUI();
-   
+
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -313,6 +400,7 @@ private String cardsHTML(
     private javax.swing.JButton jButton3;
     private javax.swing.JColorChooser jColorChooser1;
     private javax.swing.JColorChooser jColorChooser2;
+    private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

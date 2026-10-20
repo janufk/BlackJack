@@ -1,0 +1,81 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.blackjack;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class BettingDialog extends JDialog {
+
+    private final BettingSystem bettingSystem;
+    private final JTextField betField;
+    private int confirmedBet = 0;
+
+    public BettingDialog(
+            JFrame parent,
+            BettingSystem bettingSystem) {
+
+        super(parent, "Plaats je inzet", true);
+
+        this.bettingSystem = bettingSystem;
+        this.betField = new JTextField("100", 10);
+
+        JLabel balanceLabel = new JLabel(
+                "Saldo: " + bettingSystem.getBalance() + " fiches"
+        );
+
+        JLabel betLabel = new JLabel("Kies je inzet:");
+
+        JButton confirmButton = new JButton("Plaats inzet");
+
+        confirmButton.addActionListener(e -> confirmBet());
+
+        JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
+
+        panel.setBorder(
+                BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        );
+
+        panel.add(balanceLabel);
+        panel.add(new JLabel(""));
+        panel.add(betLabel);
+        panel.add(betField);
+        panel.add(new JLabel(""));
+        panel.add(confirmButton);
+
+        setContentPane(panel);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        pack();
+        setLocationRelativeTo(parent);
+    }
+
+    private void confirmBet() {
+        try {
+            int amount = Integer.parseInt(betField.getText().trim());
+
+            if (amount <= 0 || amount > bettingSystem.getBalance()) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Ongeldige inzet of onvoldoende saldo."
+                );
+                return;
+            }
+
+            confirmedBet = amount;
+            dispose();
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Voer een geldig geheel getal in."
+            );
+        }
+    }
+
+    public int showDialog() {
+        setVisible(true);
+        return confirmedBet;
+    }
+}
