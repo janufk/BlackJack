@@ -29,120 +29,51 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
         updateGUI();
     }
 
-private String cardName(int card) {
-    switch (card) {
-        case 1: return "Aas";
-        case 11: return "Boer";
-        case 12: return "Vrouw";
-        case 13: return "Heer";
-        default: return String.valueOf(card);
-    }
-}
-
-private String getCardFilename(int value, String suit) {
-    String rank;
-
-    switch (value) {
-        case 1:
-            rank = "ace";
-            break;
-        case 11:
-            rank = "jack";
-            break;
-        case 12:
-            rank = "queen";
-            break;
-        case 13:
-            rank = "king";
-            break;
-        default:
-            rank = String.valueOf(value);
-    }
-
-    String filename = rank + "_of_" + suit;
-
-    // De afbeeldingsbestanden van de plaatkaarten
-    // hebben in jouw map vaak een 2 achter de naam.
-    if (value >= 11) {
-        filename += "2";
-    }
-
-    return filename + ".png";
-}
 
 
-
-private String cardImage(int value, String suit) {
-    String filename = getCardFilename(value, suit);
-
-    java.net.URL url =
-        getClass().getResource("/images/" + filename);
-
-    if (url == null) {
-        return "<span>Kaart ontbreekt</span>";
-    }
-
-    return "<img src='" + url.toExternalForm()
-        + "' width='120' height='160'>";
-}
 
 
 private String cardsHTML(
-        java.util.List<Integer> cards,
-        java.util.List<String> suits,
+        java.util.List<Card> cards,
         boolean hideSecondCard) {
 
-    StringBuilder html = new StringBuilder(
-        "<html><div style='white-space:nowrap'>"
-    );
+    StringBuilder html = new StringBuilder("<html>");
 
     for (int i = 0; i < cards.size(); i++) {
-        if (i > 0) {
-            html.append("&nbsp;&nbsp;");
-        }
-
         if (hideSecondCard && i == 1) {
-            java.net.URL url =
-                getClass().getResource("/images/card_down.jpg");
-
-            if (url != null) {
-                html.append("<img src='")
-                    .append(url.toExternalForm())
-                    .append("' width='120' height='160'>");
-            } else {
-                html.append("[Verborgen kaart]");
-            }
+            html.append("<img src='")
+                .append(getClass().getResource("/images/card_down.jpg"))
+                .append("' width='75' height='110'> ");
         } else {
-            html.append(cardImage(cards.get(i), suits.get(i)));
+            Card card = cards.get(i);
+
+            String filename = card.getImageFilename();
+            java.net.URL imageUrl =
+                    getClass().getResource("/images/" + filename);
+
+            if (imageUrl != null) {
+                html.append("<img src='")
+                    .append(imageUrl)
+                    .append("' width='75' height='110'> ");
+            } else {
+                html.append("[")
+                    .append(card.getValue())
+                    .append(" ")
+                    .append(card.getSuit())
+                    .append("] ");
+            }
         }
     }
 
-    html.append("</div></html>");
+    html.append("</html>");
     return html.toString();
 }
 
 
 
 
-private String formatCards(java.util.List<Integer> cards,
-                           boolean hideSecondCard) {
-    StringBuilder result = new StringBuilder("[");
 
-    for (int i = 0; i < cards.size(); i++) {
-        if (i > 0) {
-            result.append(", ");
-        }
 
-        if (hideSecondCard && i == 1) {
-            result.append("?");
-        } else {
-            result.append(cardName(cards.get(i)));
-        }
-    }
-
-    result.append("]");
-    return result.toString();
-}
 
 
     private void updateGUI() {
@@ -152,7 +83,6 @@ private String formatCards(java.util.List<Integer> cards,
         "<html>Dealer: "
         + cardsHTML(
             game.getDealerCards(),
-            game.getDealerSuits(),
             hideCard
         ).replace("<html>", "").replace("</html>", "")
         + (hideCard
@@ -165,7 +95,6 @@ private String formatCards(java.util.List<Integer> cards,
         "<html>Player: "
         + cardsHTML(
             game.getPlayerCards(),
-            game.getPlayerSuits(),
             false
         ).replace("<html>", "").replace("</html>", "")
         + " (" + game.getPlayerTotal() + ")"

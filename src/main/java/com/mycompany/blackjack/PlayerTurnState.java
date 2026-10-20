@@ -13,27 +13,27 @@ package com.mycompany.blackjack;
  * @author 20253182
  */
 
+
+
+
 public class PlayerTurnState implements GameState {
 
     @Override
     public void hit(BlackjackGame game) {
+        // De speler trekt een kaart.
         game.drawPlayerCard();
 
-        if (game.getPlayerTotal() >= 21) {
-            if (game.getPlayerTotal() > 21) {
-                game.revealDealer();
-                game.setState(new GameOverState());
-            } else {
-                // Bij 21 eindigt de beurt en speelt de dealer
-                stand(game);
-            }
+        // Als de speler meer dan 21 punten heeft, is het spel voorbij.
+        if (game.getPlayerTotal() > 21) {
+            game.revealDealer();
+            game.setState(new GameOverState());
         }
     }
 
     @Override
     public void stand(BlackjackGame game) {
-        game.revealDealer();
+        // De speler stopt. Nu is de dealer aan de beurt.
         game.setState(new DealerTurnState());
-        game.stand();
     }
 }
+
