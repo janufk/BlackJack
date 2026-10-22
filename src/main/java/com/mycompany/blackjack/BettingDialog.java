@@ -17,18 +17,18 @@ public class BettingDialog extends JDialog {
             JFrame parent,
             BettingSystem bettingSystem) {
 
-        super(parent, "Plaats je inzet", true);
+        super(parent, "Bettingsystem", true);
 
         this.bettingSystem = bettingSystem;
-        this.betField = new JTextField("100", 10);
+        this.betField = new JTextField(10);
 
         JLabel balanceLabel = new JLabel(
-                "Saldo: " + bettingSystem.getBalance() + " fiches"
+                "Balance: " + bettingSystem.getBalance()
         );
 
-        JLabel betLabel = new JLabel("Kies je inzet:");
+        JLabel betLabel = new JLabel("Place your bet:");
 
-        JButton confirmButton = new JButton("Plaats inzet");
+        JButton confirmButton = new JButton("Confirm");
 
         confirmButton.addActionListener(e -> confirmBet());
 
@@ -58,7 +58,7 @@ public class BettingDialog extends JDialog {
             if (amount <= 0 || amount > bettingSystem.getBalance()) {
                 JOptionPane.showMessageDialog(
                         this,
-                        "Ongeldige inzet of onvoldoende saldo."
+                        "Invalid bet or insufficient balance."
                 );
                 return;
             }
@@ -69,7 +69,7 @@ public class BettingDialog extends JDialog {
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(
                     this,
-                    "Voer een geldig geheel getal in."
+                    "Enter a valid integer."
             );
         }
     }

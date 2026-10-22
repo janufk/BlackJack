@@ -14,9 +14,6 @@ public class BettingController {
         this.bettingSystem = bettingSystem;
     }
 
-    public BettingSystem getBettingSystem() {
-        return bettingSystem;
-    }
 
     public boolean requestBet(JFrame parent) {
         if (!bettingSystem.canBet()) {

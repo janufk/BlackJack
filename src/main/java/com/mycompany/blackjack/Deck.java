@@ -12,9 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Beheert één standaard kaartspel van 52 kaarten.
- */
 public final class Deck {
 
     private final List<Card> cards = new ArrayList<>();
@@ -25,9 +22,6 @@ public final class Deck {
         shuffle();
     }
 
-    /**
-     * Maakt 13 waarden voor elk van de vier soorten.
-     */
     private void createDeck() {
         String[] suits = {
             "clubs", "diamonds", "hearts", "spades"
@@ -40,26 +34,13 @@ public final class Deck {
         }
     }
 
-    /**
-     * Schudt de kaarten en zet de positie terug op nul.
-     */
     public void shuffle() {
         Collections.shuffle(cards);
         nextCard = 0;
     }
 
-    /**
-     * Geeft de volgende kaart uit het geschudde kaartspel.
-     *
-     * @return
-     */
-    public Card drawCard() {
-        if (nextCard >= cards.size()) {
-            throw new IllegalStateException(
-                    "Er zijn geen kaarten meer."
-            );
-        }
 
+    public Card drawCard() {
         return cards.get(nextCard++);
     }
 }

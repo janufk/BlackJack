@@ -12,10 +12,10 @@ public class PlayerTurnState implements GameState {
 
     @Override
     public void hit(BlackjackGame game) {
-        // De speler trekt een kaart.
+        // Player draws cards.
         game.drawPlayerCard();
 
-        // Als de speler meer dan 21 punten heeft, is het spel voorbij.
+        // Player total is more than 21, game ends.
         if (game.getPlayerTotal() > 21) {
             game.revealDealer();
             game.setState(new GameOverState());
@@ -24,7 +24,6 @@ public class PlayerTurnState implements GameState {
 
     @Override
     public void stand(BlackjackGame game) {
-        // De speler stopt. Nu is de dealer aan de beurt.
         game.setState(new DealerTurnState());
     }
 }

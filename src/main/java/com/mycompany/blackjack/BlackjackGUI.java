@@ -21,16 +21,15 @@ public class BlackjackGUI extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BlackjackGUI.class.getName());
 
-    /**
-     * Creates new form BlackjackGUI
-     */
+
     public BlackjackGUI() {
         initComponents();
 
         setTitle("Blackjack");
         setSize(650, 700);
         setLocationRelativeTo(null);
-
+       
+        
         bettingSystem = new BettingSystem();
         bettingController = new BettingController(bettingSystem);
         game = new BlackjackGame();
@@ -49,7 +48,7 @@ public class BlackjackGUI extends javax.swing.JFrame {
             java.util.List<Card> cards,
             boolean hideSecondCard) {
 
-        StringBuilder html = new StringBuilder("<html>");
+        StringBuilder html = new StringBuilder();
 
         for (int i = 0; i < cards.size(); i++) {
             if (hideSecondCard && i == 1) {
@@ -63,21 +62,11 @@ public class BlackjackGUI extends javax.swing.JFrame {
                 java.net.URL imageUrl
                         = getClass().getResource("/images/" + filename);
 
-                if (imageUrl != null) {
-                    html.append("<img src='")
-                            .append(imageUrl)
-                            .append("' width='75' height='110'> ");
-                } else {
-                    html.append("[")
-                            .append(card.getValue())
-                            .append(" ")
-                            .append(card.getSuit())
-                            .append("] ");
-                }
+                html.append("<img src='")
+                        .append(imageUrl)
+                        .append("' width='75' height='110'> ");
             }
         }
-
-        html.append("</html>");
         return html.toString();
     }
 
@@ -93,8 +82,6 @@ public class BlackjackGUI extends javax.swing.JFrame {
         jLabel1.setText(
                 "<html>Dealer: "
                 + cardsHTML(game.getDealerCards(), hideCard)
-                        .replace("<html>", "")
-                        .replace("</html>", "")
                 + (hideCard ? "" : " (" + game.getDealerTotal() + ")")
                 + "</html>"
         );
@@ -102,8 +89,6 @@ public class BlackjackGUI extends javax.swing.JFrame {
         jLabel2.setText(
                 "<html>Player: "
                 + cardsHTML(game.getPlayerCards(), false)
-                        .replace("<html>", "")
-                        .replace("</html>", "")
                 + " (" + game.getPlayerTotal() + ")"
                 + "</html>"
         );
@@ -125,11 +110,10 @@ public class BlackjackGUI extends javax.swing.JFrame {
                 result = "draw";
             }
 
-            // Verwerk de inzet één keer.
             bettingController.settleBet(result);
             betSettled = true;
 
-            // Toon de uitslag op het speelscherm.
+            // Shows the result on the screen.
             String resultText;
 
             switch (result) {
@@ -145,7 +129,7 @@ public class BlackjackGUI extends javax.swing.JFrame {
                     jLabel2.getText().replace("</html>", resultText + "</html>")
             );
 
-            // Controleer of de speler geen fiches meer heeft.
+            // Checks if the player still has any balance.
             if (bettingSystem.getBalance() <= 0) {
                 roundActive = false;
 
@@ -165,14 +149,15 @@ public class BlackjackGUI extends javax.swing.JFrame {
 
         }
 
-        // Knoppen alleen gebruiken tijdens een actieve ronde.
+        // Buttons hit and stand are only active during a game.
+        // New game button is only active during no game.
         jButton1.setEnabled(roundActive && !game.isGameOver());
         jButton2.setEnabled(roundActive && !game.isGameOver());
         jButton3.setEnabled(!roundActive || game.isGameOver());
 
         setTitle(
-                "Blackjack - Saldo: " + bettingSystem.getBalance()
-                + " fiches - Inzet: " + bettingSystem.getCurrentBet()
+                "Balance: " + bettingSystem.getBalance()
+                + " Current bet: " + bettingSystem.getCurrentBet()
         );
     }
 
@@ -303,49 +288,7 @@ public class BlackjackGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        if (!roundActive || game.isGameOver()) {
-            return;
-        }
-
-        game.hit();
-
-        updateGUI();
-
-
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-
-        // Geen geld meer? Dan is het spel afgelopen.
-        if (bettingSystem.getBalance() <= 0) {
-            roundActive = false;
-            jButton1.setEnabled(false);
-            jButton2.setEnabled(false);
-            jButton3.setEnabled(false);
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "GAME OVER!\nJe hebt geen fiches meer over.",
-                    "Game Over",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
-
-            return;
-        }
-
-        // Je moet eerst de huidige ronde afmaken.
-        if (roundActive && !game.isGameOver()) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Maak eerst de huidige ronde af."
-            );
-            return;
-        }
-
-        // Vraag een nieuwe inzet.
         if (!bettingController.requestBet(this)) {
             return;
         }
@@ -358,16 +301,16 @@ public class BlackjackGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        if (!roundActive || game.isGameOver()) {
-            return;
-        }
-
         game.stand();
         updateGUI();
 
-
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        game.hit();
+        updateGUI();
+
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

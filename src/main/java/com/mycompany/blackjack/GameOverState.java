@@ -13,11 +13,11 @@ public class GameOverState implements GameState {
 
     @Override
     public void hit(BlackjackGame game) {
-        // Spel is afgelopen
+
     }
 
     @Override
     public void stand(BlackjackGame game) {
-        // Spel is afgelopen
+
     }
 }

@@ -8,10 +8,6 @@ package com.mycompany.blackjack;
  *
  * @author 20253182
  */
-/**
- * Beheert een Blackjack-ronde. Het deck deelt kaarten uit, de handen bewaren ze
- * en de GameState bepaalt welke acties toegestaan zijn.
- */
 public final class BlackjackGame {
 
     private Deck deck;
@@ -21,9 +17,6 @@ public final class BlackjackGame {
     private GameState state;
     private boolean dealerRevealed;
 
-    /**
-     * Start een nieuwe ronde met een nieuw geschud deck.
-     */
     public void newGame() {
         deck = new Deck();
 
@@ -33,7 +26,7 @@ public final class BlackjackGame {
         dealerRevealed = false;
         state = new PlayerTurnState();
 
-        // Deel twee kaarten aan iedere hand.
+        // Deals 2 cards for the player and the dealer.
         drawPlayerCard();
         drawDealerCard();
         drawPlayerCard();
@@ -42,16 +35,11 @@ public final class BlackjackGame {
 
     public void hit() {
         state.hit(this);
-        if (!isGameOver()
-                && state instanceof PlayerTurnState
-                && getPlayerTotal() == 21) {
-            stand();
-        }
+        
     }
 
     public void stand() {
         state.stand(this);
-
         if (state instanceof DealerTurnState dealerTurnState) {
             dealerTurnState.playDealerTurn(this);
         }

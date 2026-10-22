@@ -8,9 +8,7 @@ package com.mycompany.blackjack;
  *
  * @author 20253182
  */
-/**
- * Stelt één speelkaart voor. Bijvoorbeeld: de 7 van harten.
- */
+
 public class Card {
 
     private final int value;
@@ -29,10 +27,7 @@ public class Card {
         return suit;
     }
 
-    /**
-     * Geeft de waarde die meetelt voor Blackjack. Boer, vrouw en heer tellen
-     * als 10. Een aas wordt bij de scoreberekening behandeld.
-     */
+
     public int getBlackjackValue() {
         if (value == 1) {
             return 11;
@@ -45,12 +40,7 @@ public class Card {
         return value;
     }
 
-    /**
-     * Zet de kaart om naar een bestandsnaam die de GUI voor de afbeelding kan
-     * gebruiken.
-     *
-     * @return
-     */
+
     public String getImageFilename() {
         String rank;
 
@@ -66,13 +56,10 @@ public class Card {
             default ->
                 String.valueOf(value);
         };
-
         String filename = rank + "_of_" + suit;
-
-        if (value >= 11) {
+        if(value >= 11) {
             filename += "2";
         }
-
         return filename + ".png";
     }
 

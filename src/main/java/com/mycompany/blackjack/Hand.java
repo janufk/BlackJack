@@ -11,9 +11,7 @@ package com.mycompany.blackjack;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Beheert de kaarten en de score van één hand.
- */
+
 public class Hand {
 
     private final List<Card> cards = new ArrayList<>();
@@ -22,20 +20,11 @@ public class Hand {
         cards.add(card);
     }
 
-    public void clear() {
-        cards.clear();
-    }
-
     public List<Card> getCards() {
         return new ArrayList<>(cards);
     }
 
-    /**
-     * Berekent de Blackjack-score. Azen tellen als 11, maar worden 1 als de
-     * score anders boven 21 uitkomt.
-     *
-     * @return
-     */
+    // ace is originally 11, but it becomes 1 if the score would be above 21.
     public int getTotal() {
         int total = 0;
         int aces = 0;
