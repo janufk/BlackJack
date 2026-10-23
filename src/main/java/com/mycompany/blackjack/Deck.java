@@ -6,7 +6,10 @@ package com.mycompany.blackjack;
 
 /**
  *
- * @author 20253182
+ * @author gwynerwitkamp
+ * @id 2375125
+ * @author janufkrishnan
+ * @id 2224429
  */
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +41,6 @@ public final class Deck {
         Collections.shuffle(cards);
         nextCard = 0;
     }
-
 
     public Card drawCard() {
         return cards.get(nextCard++);

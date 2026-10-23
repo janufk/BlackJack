@@ -6,9 +6,11 @@ package com.mycompany.blackjack;
 
 /**
  *
- * @author 20253182
+ * @author gwynerwitkamp
+ * @id 2375125
+ * @author janufkrishnan
+ * @id 2224429
  */
-
 public class Card {
 
     private final int value;
@@ -27,7 +29,6 @@ public class Card {
         return suit;
     }
 
-
     public int getBlackjackValue() {
         if (value == 1) {
             return 11;
@@ -39,7 +40,6 @@ public class Card {
 
         return value;
     }
-
 
     public String getImageFilename() {
         String rank;
@@ -57,7 +57,7 @@ public class Card {
                 String.valueOf(value);
         };
         String filename = rank + "_of_" + suit;
-        if(value >= 11) {
+        if (value >= 11) {
             filename += "2";
         }
         return filename + ".png";

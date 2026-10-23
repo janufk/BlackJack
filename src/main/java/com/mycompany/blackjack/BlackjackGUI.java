@@ -8,7 +8,10 @@ import javax.swing.JOptionPane;
  */
 /**
  *
- * @author 20253182
+ * @author gwynerwitkamp
+ * @id 2375125
+ * @author janufkrishnan
+ * @id 2224429
  */
 public class BlackjackGUI extends javax.swing.JFrame {
 
@@ -21,15 +24,13 @@ public class BlackjackGUI extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BlackjackGUI.class.getName());
 
-
     public BlackjackGUI() {
         initComponents();
 
         setTitle("Blackjack");
         setSize(650, 700);
         setLocationRelativeTo(null);
-       
-        
+
         bettingSystem = new BettingSystem();
         bettingController = new BettingController(bettingSystem);
         game = new BlackjackGame();

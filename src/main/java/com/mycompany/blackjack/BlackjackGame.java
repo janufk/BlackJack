@@ -6,7 +6,10 @@ package com.mycompany.blackjack;
  */
 /**
  *
- * @author 20253182
+ * @author gwynerwitkamp
+ * @id 2375125
+ * @author janufkrishnan
+ * @id 2224429
  */
 public final class BlackjackGame {
 
@@ -35,7 +38,7 @@ public final class BlackjackGame {
 
     public void hit() {
         state.hit(this);
-        
+
     }
 
     public void stand() {
